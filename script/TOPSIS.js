@@ -93,7 +93,7 @@ function calculateTOPSIS() {
 
     // Calculate the separation measures
     let separationMeasures = calculateSeparationMeasures(weightedMatrix, idealPositive, idealNegative);
-    outputHTML += '<h4>Separation Measures:</h4>' + generateMatrixHTML(separationMeasures, 'Alternative', ['','D-']);
+    outputHTML += '<h4>Separation Measures:</h4>' + generateMatrixHTML(separationMeasures, 'Alternative', ['D+','D-']);
 
     // Calculate the preference values and rank the alternatives
     let preferenceValues = calculatePreferenceValues(separationMeasures, rows);
@@ -170,24 +170,39 @@ function findBestAlternative(preferenceValues) {
 }
 
 function generateMatrixHTML(matrix, rowLabel, colLabel) {
-    let html = '<table>';
-    if (colLabel) {
-        html += '<tr><th></th>';
-        for (let i = 0; i < matrix[0].length; i++) {
-            html += `<th>${colLabel} ${i + 1}</th>`;
+    let html = '<table class="table table-bordered"><tr>';
+    
+    // Jika rowLabel diberikan, tambahkan header untuk baris (alternatif)
+    if (rowLabel) html += `<th>${rowLabel}</th>`;
+    
+    // Periksa apakah colLabel adalah array atau string
+    if (Array.isArray(colLabel)) {
+        colLabel.forEach(label => {
+            html += `<th>${label}</th>`;
+        });
+    } else {
+        // Jika colLabel bukan array, buat kolom header berdasarkan jumlah kolom matrix
+        for (let i = 1; i <= matrix[0].length; i++) {
+            html += `<th>${colLabel} ${i}</th>`;
         }
-        html += '</tr>';
     }
+    
+    html += '</tr>';
+    
+    // Tampilkan data matrix
     matrix.forEach((row, rowIndex) => {
-        html += `<tr><th>${rowLabel ? rowLabel + ' ' + (rowIndex + 1) : ''}</th>`;
-        row.forEach(cell => {
-            html += `<td>${cell.toFixed(4)}</td>`;
+        html += `<tr><td>Alternative ${rowIndex + 1}</td>`;
+        row.forEach(value => {
+            html += `<td>${value.toFixed(4)}</td>`;
         });
         html += '</tr>';
     });
+    
     html += '</table>';
     return html;
 }
+
+
 
 function generatePreferenceHTML(preferenceValues) {
     let html = '<table><tr><th>Alternative</th><th>Preference Value</th><th>Rank</th></tr>';
