@@ -1,56 +1,73 @@
-
+// inisiasi variabel
 let inp = [];
 let stat = [];
 let r = [];
 let w = [];
 let v = [];
+let maxC = []
+let minC = []
+let numKriteria = 0
+let numAlternatif = 0
+// Fungsi untuk Generate tabel yang sesuai banyak kriteria dan alternatif yang dibutuhkan
+function initiateValue(){
+    // Pastikan numKriteria dan numAlternatif sudah valid
+    numKriteria = parseInt(document.getElementById('numKriteria').value);
+    numAlternatif = parseInt(document.getElementById('numAlternatif').value);
 
-// Function to generate the matrix inputs based on criteria and alternatives
+    // Cek apakah nilai valid, jika tidak, return untuk menghentikan inisialisasi yang salah
+    if (isNaN(numKriteria) || isNaN(numAlternatif) || numKriteria <= 0 || numAlternatif <= 0) {
+        console.error("Nilai numKriteria atau numAlternatif tidak valid!");
+        return;
+    }
+
+    // Initialize array berdasarkan banyak alternatif dan kriteria
+    inp = Array.from({ length: numAlternatif }, () => Array(numKriteria).fill(0));
+    r = Array.from({ length: numAlternatif }, () => Array(numKriteria).fill(0));
+    // Initialize array berdasarkan banyak kriteria
+    stat = Array.from({ length: numKriteria }, () => 0); 
+    w = Array.from({ length: numKriteria }, () => 0); 
+    maxC = Array.from({ length: numKriteria }, () => 0); // Initialize stat array for criteria
+    minC = Array.from({ length: numKriteria }, () => 999); // Initialize stat array for criteria
+    // Initialize array berdasarkan banyak alternatif
+    v = Array.from({ length: numAlternatif }, () => 0); 
+    
+}
 function generateTable() {
-    const numKriteria = document.getElementById('numKriteria').value;
-    const numAlternatif = document.getElementById('numAlternatif').value;
     const matrixInput = document.getElementById('matrixInput');
     const matrixOutput = document.getElementById('matrixOutput');
 
     matrixInput.innerHTML = ''; // Clear existing table
 
-    // Initialize the arrays based on the number of alternatives and criteria
-    inp = Array.from({ length: numAlternatif }, () => Array(numKriteria).fill(0));
-    r = Array.from({ length: numAlternatif }, () => Array(numKriteria).fill(0));
-    stat = Array.from({ length: numKriteria }, () => 0); // Initialize stat array for criteria
-    w = Array.from({ length: numKriteria }, () => 0); // Initialize stat array for criteria
-    v = Array.from({ length: numAlternatif }, () => 0); // Initialize stat array for criteria
-
-    // Create header row for criteria
+    initiateValue()
+    // Buat header row untuk kriteria
     const headerRow = document.createElement('tr');
     const emptyCell = document.createElement('th');
+    emptyCell.textContent = `Produk`;
     headerRow.appendChild(emptyCell); // Empty top-left corner
     for (let j = 0; j < numKriteria; j++) {
         const headerCell = document.createElement('th');
-        headerCell.textContent = `C${j+1}`;
+        headerCell.textContent = `C${j+1}`; // Collumn header (kriteria)
         
-        // Create a dropdown for each criterion to choose K or B
-        const select = document.createElement('select');
+        // Dropdown dropdown untuk setiap kriteria antara "Keuntungan" atau "Beban"
+        const select = document.createElement('select'); // Buat elemen select
+        select.id = `select${j + 1}`; // Set ID setelah elemen dibuat
         select.innerHTML = `
-            <option value="0">K</option>
-            <option value="1">B</option>
+            <option value="0">Keuntungan</option>
+            <option value="1">Biaya</option>
         `;
-        select.onchange = function() {
-            stat[j] = parseInt(select.value); // Update stat array based on selection
-        };
         
         headerCell.appendChild(select);
         headerRow.appendChild(headerCell);
     }
     matrixInput.appendChild(headerRow);
 
-    // Create input rows for alternatives
+    // Buat input rows untuk alternatif
     for (let i = 0; i < numAlternatif; i++) {
         const row = document.createElement('tr');
         const rowHeader = document.createElement('th');
-        rowHeader.textContent = `A${i+1}`; // Row header (alternative)
+        rowHeader.textContent = `A${i+1}`; // Row header (alternatif)
         row.appendChild(rowHeader);
-
+        // buat cell sebanyak alternatif x kriteia
         for (let j = 0; j < numKriteria; j++) {
             const cell = document.createElement('td');
             const input = document.createElement('input');
@@ -65,9 +82,11 @@ function generateTable() {
 
         matrixInput.appendChild(row);
     }
+
+    // Buat 1 row untuk beban (W)
     const row = document.createElement('tr');
     const rowHeader = document.createElement('th');
-    rowHeader.textContent = `W`; // Row header (alternative)
+    rowHeader.textContent = `W`; // Row header (Weight)
     row.appendChild(rowHeader);
     for (let j = 0; j < numKriteria; j++) {
         const cell = document.createElement('td');
@@ -83,61 +102,53 @@ function generateTable() {
     matrixInput.appendChild(row);
 }
 
+// fungsi yang me-return urutan dari value berdasar array arr
 function getRankIndex(arr, value) {
     // Buat salinan dari array dan urutkan dari terbesar ke terkecil
     const sortedArr = [...arr].sort((a, b) => b - a);
     // Temukan indeks dari nilai dalam array yang sudah diurutkan
     return sortedArr.indexOf(value) + 1; // Tambahkan 1 untuk mendapatkan peringkat
 }
-
-// Function to save input values into the array
-function saveInputToArray() {
-    
-    const numKriteria = document.getElementById('numKriteria').value;
-    const numAlternatif = document.getElementById('numAlternatif').value;
-    let maxC = Array.from({ length: numKriteria }, () => 0); // Initialize stat array for criteria
-    let minC = Array.from({ length: numKriteria }, () => 999); // Initialize stat array for criteria
-    for (let i = 0; i < numAlternatif; i++) {
-        w[i]=0;
-        for (let j = 0; j < numKriteria; j++) {
-            const inputVal = document.getElementById(`inp${i+1}${j+1}`).value;
-            const inputW = document.getElementById(`inpW${j+1}`).value;
-            inp[i][j] = parseFloat(inputVal) || 0; // Save input value to the array, default to 0 if empty
-            w[j] = parseFloat(inputW) || 0; // Save input value to the array, default to 0 if empty
-            if (maxC[j]<inp[i][j]){
-                maxC[j] = inp[i][j];
-            }
-            if (minC[j]>inp[i][j]){
-                minC[j] = inp[i][j];
-            }
-        }
-    }
+// fungsi kalkulasi
+function calculate(){
+    // inisiasi value
+    initiateValue()
+    // ambil input ke variabel
+    saveInputToArray()
+    // kalkulasi matrix r dan v
     for (let i = 0; i < numAlternatif; i++) {
         for (let j = 0; j < numKriteria; j++) {
+            // console.log(stat[j])
             if (stat[j]==0){
+                if (maxC[j] == 0){
+                    r[i][j] = "INF"
+                    v[i] = "INF"
+                    continue
+                }
                 r[i][j] = inp[i][j]/maxC[j];
             }else{
+                if (inp[i][j] == 0){
+                    r[i][j] = "INF"
+                    v[i] = "INF"
+                    continue
+                }
                 r[i][j] = minC[j]/inp[i][j];
             }
             v[i] += w[j]*r[i][j]
         }
     }
-    
-    // Output the arrays to the screen
-    // let outputText = `Input Array: ${JSON.stringify(v)}\n`;
-    // outputText += `Stat Array: ${JSON.stringify(stat)}\n`;
-    // outputText += `MaxC Array: ${JSON.stringify(maxC)}\n`;
-    // outputText += `MinC Array: ${JSON.stringify(minC)}\n`;
-    // outputText += `R Array: ${JSON.stringify(r)}\n`;
-    // outputText += `W Array: ${JSON.stringify(w)}\n`;
-    // outputText += `V Array: ${JSON.stringify(v)}\n`;
-
-    // document.getElementById('output').textContent = outputText;
+    // tampilkan matrix
+    createMatrix()
+}
+// fungsi menampilkan matrix r, v, dan rank
+function createMatrix(){
+    // kosongkan output dahulu
     document.getElementById('matrixOutput').innerHTML = '';
 
     // Create header row for criteria
     const headerRow = document.createElement('tr');
     const emptyCell = document.createElement('th');
+    emptyCell.textContent = `Rij`;
     headerRow.appendChild(emptyCell); // Empty top-left corner
     for (let j = 0; j < numKriteria + 2; j++) {
         if (j < numKriteria) {
@@ -194,6 +205,33 @@ function saveInputToArray() {
 
 
         matrixOutput.appendChild(row);
+    }
+}
+// fungsi untuk menyimpan input values ke array
+function saveInputToArray() {
+    
+    const numKriteria = document.getElementById('numKriteria').value;
+    const numAlternatif = document.getElementById('numAlternatif').value;
+    
+    for (let i = 0; i < numAlternatif; i++) {
+        w[i]=0;
+        for (let j = 0; j < numKriteria; j++) {
+            const inputVal = document.getElementById(`inp${i+1}${j+1}`).value;
+            const inputW = document.getElementById(`inpW${j+1}`).value;
+            inp[i][j] = parseFloat(inputVal) || 0; // Save input value to the array, default to 0 if empty
+            w[j] = parseFloat(inputW) || 0; // Save input value to the array, default to 0 if empty
+            if (maxC[j]<inp[i][j]){
+                maxC[j] = inp[i][j];
+            }
+            if (minC[j]>inp[i][j]){
+                minC[j] = inp[i][j];
+            }
+            // Ambil nilai dari dropdown yang sudah ada
+            const select = document.getElementById(`select${j + 1}`);
+            if (select) {
+                stat[j] = parseInt(select.value); // Ambil nilai dari dropdown
+            }
+        }
     }
 }
 
