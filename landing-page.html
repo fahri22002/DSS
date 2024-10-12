@@ -214,16 +214,13 @@
         }
       });
 
-      // Menambahkan event listener untuk tautan Beranda
       document.querySelector(".nav-link.active").addEventListener("click", function (event) {
-        event.preventDefault(); // Mencegah aksi default dari tautan
+        event.preventDefault();
 
-        // Cek apakah scroll sudah di posisi paling atas
         if (window.scrollY > 0) {
-          // Lakukan scroll ke atas
           window.scrollTo({
             top: 0,
-            behavior: "smooth", // Membuat efek scroll halus
+            behavior: "smooth",
           });
         }
       });
