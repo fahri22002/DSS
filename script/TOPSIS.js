@@ -88,8 +88,8 @@ function calculateTOPSIS() {
 
     // Calculate the ideal positive and negative solutions
     let { idealPositive, idealNegative } = calculateIdealSolutions(weightedMatrix, criteriaTypes);
-    outputHTML += '<h4>Ideal Positive Solutions:</h4>' + generateMatrixHTML([idealPositive], '', 'Criteria');
-    outputHTML += '<h4>Ideal Negative Solutions:</h4>' + generateMatrixHTML([idealNegative], '', 'Criteria');
+    outputHTML += '<h4>Ideal Positive Solutions:</h4>' + generateMatrixHTML([idealPositive], 'Alternative', 'Criteria');
+    outputHTML += '<h4>Ideal Negative Solutions:</h4>' + generateMatrixHTML([idealNegative], 'Alternative', 'Criteria');
 
     // Calculate the separation measures
     let separationMeasures = calculateSeparationMeasures(weightedMatrix, idealPositive, idealNegative);
