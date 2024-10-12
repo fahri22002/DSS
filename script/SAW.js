@@ -109,12 +109,24 @@ function getRankIndex(arr, value) {
     // Temukan indeks dari nilai dalam array yang sudah diurutkan
     return sortedArr.indexOf(value) + 1; // Tambahkan 1 untuk mendapatkan peringkat
 }
+// fungsi normalisasi nilai w
+function normalizeW(){
+    let sw = 0
+    for (let j = 0; j < numKriteria; j++) {
+        sw += w[j]
+    }
+    for (let j = 0; j < numKriteria; j++) {
+        w[j] = w[j]/sw
+    }
+}
 // fungsi kalkulasi
 function calculate(){
     // inisiasi value
     initiateValue()
     // ambil input ke variabel
     saveInputToArray()
+    // normalisasi nilai w
+    normalizeW()
     // kalkulasi matrix r dan v
     for (let i = 0; i < numAlternatif; i++) {
         for (let j = 0; j < numKriteria; j++) {
@@ -195,10 +207,15 @@ function createMatrix(){
                 const cell = document.createElement('td');
                 const output = document.createElement('input'); // Gunakan input alih-alih output
                 output.type = 'number';
-                output.value = getRankIndex(v,v[i]); // Set nilai
+                let rank = getRankIndex(v,v[i]);
+                output.value = rank // Set nilai
                 output.readOnly = true; // Jadikan read-only
                 cell.appendChild(output);
                 row.appendChild(cell);
+                if (rank == 1){
+                    document.getElementById('conclusion').textContent = `Berdasarkan hasil perhitungan diatas, maka alternatif terbaik yang dapat dipilih adalah : \nAlternatif A${i+1}`;
+
+                }
             }
         }
 
