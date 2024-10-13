@@ -15,13 +15,16 @@ function initiateValue(){
         console.error("Nilai numKriteria atau numAlternatif tidak valid!");
         return;
     }
+    // Initialize array berdasarkan banyak alternatif dan kriteria
     inp = Array.from({ length: numAlternatif }, () => Array(numKriteria).fill(0));
-    stat = Array.from({ length: numKriteria }, () => 0); // Initialize stat array for criteria
-    w = Array.from({ length: numKriteria }, () => 0); // Initialize stat array for criteria
-    v = Array.from({ length: numAlternatif }, () => 0); // Initialize stat array for criteria
-    s = Array.from({ length: numAlternatif }, () => 1); // Initialize stat array for criteria
+    // Initialize array berdasarkan banyak kriteria
+    stat = Array.from({ length: numKriteria }, () => 0); 
+    w = Array.from({ length: numKriteria }, () => 0); 
+    // Initialize array berdasarkan banyak alternatif
+    v = Array.from({ length: numAlternatif }, () => 0); 
+    s = Array.from({ length: numAlternatif }, () => 1); 
 }
-// Function to generate the matrix inputs based on criteria and alternatives
+// fungsi untuk generate tabel input
 function generateTable() {
     const matrixInput = document.getElementById('matrixInput');
     const matrixOutput = document.getElementById('matrixOutput');
@@ -29,7 +32,7 @@ function generateTable() {
     matrixInput.innerHTML = ''; // Clear existing table
 
     initiateValue()
-    // Create header row for criteria
+    // Buat header row untuk kriteria
     const headerRow = document.createElement('tr');
     const emptyCell = document.createElement('th');
     headerRow.appendChild(emptyCell); // Empty top-left corner
@@ -50,13 +53,13 @@ function generateTable() {
     }
     matrixInput.appendChild(headerRow);
 
-    // Create input rows for alternatives
+    // Buat input rows untuk alternatif
     for (let i = 0; i < numAlternatif; i++) {
         const row = document.createElement('tr');
         const rowHeader = document.createElement('th');
         rowHeader.textContent = `A${i+1}`; // Row header (alternative)
         row.appendChild(rowHeader);
-
+        // buat cell sebanyak alternatif x kriteia
         for (let j = 0; j < numKriteria; j++) {
             const cell = document.createElement('td');
             const input = document.createElement('input');
@@ -71,6 +74,7 @@ function generateTable() {
 
         matrixInput.appendChild(row);
     }
+    // Buat 1 row untuk beban (W)
     const row = document.createElement('tr');
     const rowHeader = document.createElement('th');
     rowHeader.textContent = `W`; // Row header (alternative)
@@ -88,13 +92,14 @@ function generateTable() {
     }
     matrixInput.appendChild(row);
 }
-
+// fungsi yang me-return urutan dari value berdasar array arr
 function getRankIndex(arr, value) {
     // Buat salinan dari array dan urutkan dari terbesar ke terkecil
     const sortedArr = [...arr].sort((a, b) => b - a);
     // Temukan indeks dari nilai dalam array yang sudah diurutkan
     return sortedArr.indexOf(value) + 1; // Tambahkan 1 untuk mendapatkan peringkat
 }
+// fungsi normalisasi nilai w
 function normalizeW(){
     let sw = 0
     for (let j = 0; j < numKriteria; j++) {
@@ -104,10 +109,15 @@ function normalizeW(){
         w[j] = w[j]/sw
     }
 }
+// fungsi kalkulasi
 function calculate(){
+    // inisiasi value
     initiateValue()
+    // ambil input ke variabel
     saveInputToArray()
+    // normalisasi nilai w
     normalizeW()
+    // kalkulasi matrix r dan v
     let sumS = 0
     s = Array.from({ length: numAlternatif }, () => 1); // Initialize stat array for criteria
     for (let i = 0; i < numAlternatif; i++) {
@@ -126,10 +136,12 @@ function calculate(){
     for (let i = 0; i < numAlternatif; i++) {
         v[i] = s[i]/sumS
     }
+    // tampilkan matrix output
     createMatrix()
 }
-
+// fungsi menampilkan matrix r, v, dan rank
 function createMatrix(){
+    // kosongkan output dahulu
     document.getElementById('matrixOutput').innerHTML = '';
 
     // Create header row for criteria

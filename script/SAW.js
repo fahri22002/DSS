@@ -32,6 +32,7 @@ function initiateValue(){
     v = Array.from({ length: numAlternatif }, () => 0); 
     
 }
+// fungsi untuk generate tabel input
 function generateTable() {
     const matrixInput = document.getElementById('matrixInput');
     const matrixOutput = document.getElementById('matrixOutput');
@@ -149,7 +150,7 @@ function calculate(){
             v[i] += w[j]*r[i][j]
         }
     }
-    // tampilkan matrix
+    // tampilkan matrix output
     createMatrix()
 }
 // fungsi menampilkan matrix r, v, dan rank
