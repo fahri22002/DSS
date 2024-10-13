@@ -1,34 +1,45 @@
+// Fungsi untuk menghasilkan tabel kriteria dan alternatif
 function generateTables() {
+  // Mengambil nilai dari input kriteria dan alternatif
   const criteriaInput = document.getElementById("criteria").value;
   const alternativesInput = document.getElementById("alternatives").value;
 
+  // Memisahkan dan membersihkan input menjadi array
   const criteria = criteriaInput.split(",").map((item) => item.trim());
   const alternatives = alternativesInput.split(",").map((item) => item.trim());
 
+  // Menghasilkan tabel untuk kriteria
   const criteriaTable = document.getElementById("criteriaTable");
   criteriaTable.innerHTML = `<thead class="thead-dark"><tr><th>Kode</th><th>Nama</th></tr></thead><tbody>`;
   criteria.forEach((criterion, index) => {
+    // Menambahkan setiap kriteria ke dalam tabel
     criteriaTable.innerHTML += `<tr><td>K${String(index + 1)}</td><td>${criterion}</td></tr>`;
   });
   criteriaTable.innerHTML += `</tbody>`;
 
+  // Menghasilkan tabel untuk alternatif
   const alternativeTable = document.getElementById("alternativeTable");
   alternativeTable.innerHTML = `<thead class="thead-dark"><tr><th>Kode</th><th>Nama</th></tr></thead><tbody>`;
   alternatives.forEach((alternative, index) => {
+    // Menambahkan setiap alternatif ke dalam tabel
     alternativeTable.innerHTML += `<tr><td>A${String(index + 1)}</td><td>${alternative}</td></tr>`;
   });
   alternativeTable.innerHTML += `</tbody>`;
 
+  // Menghasilkan tabel perbandingan pairwise untuk kriteria
   generatePairwiseTable(criteria.length, "pairwiseCriteriaContainer", "Kriteria");
+  // Menghasilkan tabel perbandingan pairwise untuk alternatif
   generatePairwiseTablesForAlternatives(criteria.length, alternatives.length);
 }
 
+// Fungsi untuk menghasilkan tabel perbandingan pairwise
 function generatePairwiseTable(numItems, containerId, itemType) {
   const tableContainer = document.getElementById(containerId);
   const table = document.createElement("table");
   table.id = `${itemType.toLowerCase()}ComparisonTable`;
   table.className = "table table-bordered table-striped";
 
+  // Membuat baris header untuk tabel
   let headerRow = "<thead class='thead-dark'><tr><th>" + itemType + "</th>";
   for (let i = 1; i <= numItems; i++) {
     headerRow += `<th>${itemType.charAt(0)}${i}</th>`;
@@ -36,6 +47,7 @@ function generatePairwiseTable(numItems, containerId, itemType) {
   headerRow += "</tr></thead><tbody>";
   table.innerHTML += headerRow;
 
+  // Mengisi tabel dengan nilai perbandingan pairwise
   for (let i = 1; i <= numItems; i++) {
     let row = `<tr><th>${itemType.charAt(0)}${i}</th>`;
     for (let j = 1; j <= numItems; j++) {
@@ -53,6 +65,7 @@ function generatePairwiseTable(numItems, containerId, itemType) {
   tableContainer.appendChild(table);
 }
 
+// Fungsi untuk menghasilkan tabel perbandingan pairwise untuk alternatif
 function generatePairwiseTablesForAlternatives(numCriteria, numAlternatives) {
   const container = document.getElementById("pairwiseAlternativesContainer");
   container.innerHTML = "";
@@ -68,6 +81,7 @@ function generatePairwiseTablesForAlternatives(numCriteria, numAlternatives) {
     headerRow += "</tr></thead><tbody>";
     table.innerHTML += headerRow;
 
+    // Mengisi tabel dengan nilai perbandingan pairwise untuk alternatif
     for (let j = 1; j <= numAlternatives; j++) {
       let row = `<tr><th>A${j}</th>`;
       for (let k = 1; k <= numAlternatives; k++) {
@@ -89,6 +103,7 @@ function generatePairwiseTablesForAlternatives(numCriteria, numAlternatives) {
   }
 }
 
+// Fungsi untuk memperbarui nilai otomatis dalam tabel perbandingan
 function updateAutoValues(row, col, tableId) {
   const table = document.getElementById(tableId);
   const value = table.rows[row].cells[col].innerText;
@@ -100,6 +115,7 @@ function updateAutoValues(row, col, tableId) {
   table.rows[col].cells[row].innerText = reciprocalValue;
 }
 
+// Fungsi untuk menghitung bobot dari kriteria dan alternatif
 function calculateWeights() {
   const criteriaTable = document.getElementById("kriteriaComparisonTable");
   const criteriaValues = [];
