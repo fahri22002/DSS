@@ -8,7 +8,7 @@ let maxC = []
 let minC = []
 let numKriteria = 0
 let numAlternatif = 0
-// Fungsi untuk Generate tabel yang sesuai banyak kriteria dan alternatif yang dibutuhkan
+// Fungsi untuk reset nilai variabel
 function initiateValue(){
     // Pastikan numKriteria dan numAlternatif sudah valid
     numKriteria = parseInt(document.getElementById('numKriteria').value);

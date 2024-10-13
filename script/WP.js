@@ -1,10 +1,10 @@
-
+// inisiasi variabel
 let inp = [];
 let stat = [];
 let s = [];
 let w = [];
 let v = [];
-
+// Fungsi untuk reset nilai variabel
 function initiateValue(){
     // Pastikan numKriteria dan numAlternatif sudah valid
     numKriteria = parseInt(document.getElementById('numKriteria').value);
