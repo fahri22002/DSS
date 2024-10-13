@@ -1,47 +1,34 @@
 function generateTables() {
-  // Mengambil input kriteria dan alternatif dari elemen DOM
   const criteriaInput = document.getElementById("criteria").value;
   const alternativesInput = document.getElementById("alternatives").value;
 
-  // Mendapatkan referensi tabel input
-  const inputTable = document.getElementById("input-table");
-  // Memisahkan dan membersihkan input kriteria dan alternatif
   const criteria = criteriaInput.split(",").map((item) => item.trim());
   const alternatives = alternativesInput.split(",").map((item) => item.trim());
 
-  // Menghasilkan tabel kriteria
   const criteriaTable = document.getElementById("criteriaTable");
   criteriaTable.innerHTML = `<thead class="thead-dark"><tr><th>Kode</th><th>Nama</th></tr></thead><tbody>`;
   criteria.forEach((criterion, index) => {
-    criteriaTable.innerHTML += `<tr><td class="text-center">C${String(index + 1).padStart(2, "0")}</td><td class="text-center">${criterion}</td></tr>`;
+    criteriaTable.innerHTML += `<tr><td>C${String(index + 1).padStart(2, "0")}</td><td>${criterion}</td></tr>`;
   });
   criteriaTable.innerHTML += `</tbody>`;
 
-  // Menghasilkan tabel alternatif
   const alternativeTable = document.getElementById("alternativeTable");
   alternativeTable.innerHTML = `<thead class="thead-dark"><tr><th>Kode</th><th>Nama</th></tr></thead><tbody>`;
   alternatives.forEach((alternative, index) => {
-    alternativeTable.innerHTML += `<tr><td class="text-center">A${String(index + 1).padStart(2, "0")}</td><td class="text-center">${alternative}</td></tr>`;
+    alternativeTable.innerHTML += `<tr><td>A${String(index + 1).padStart(2, "0")}</td><td>${alternative}</td></tr>`;
   });
   alternativeTable.innerHTML += `</tbody>`;
 
-  // Menampilkan tabel input
-  inputTable.classList.remove("hidden");
-
-  // Menghasilkan tabel perbandingan kriteria
   generatePairwiseTable(criteria.length, "pairwiseCriteriaContainer", "Kriteria");
-  // Menghasilkan tabel perbandingan alternatif untuk setiap kriteria
   generatePairwiseTablesForAlternatives(criteria.length, alternatives.length);
 }
 
 function generatePairwiseTable(numItems, containerId, itemType) {
-  // Membuat tabel perbandingan pairwise untuk kriteria atau alternatif
   const tableContainer = document.getElementById(containerId);
   const table = document.createElement("table");
   table.id = `${itemType.toLowerCase()}ComparisonTable`;
-  table.className = "table table-bordered table-striped text-center"; // Menambahkan kelas text-center
+  table.className = "table table-bordered table-striped";
 
-  // Menyiapkan header tabel
   let headerRow = "<thead class='thead-dark'><tr><th>" + itemType + "</th>";
   for (let i = 1; i <= numItems; i++) {
     headerRow += `<th>${itemType.charAt(0)}${i}</th>`;
@@ -49,7 +36,6 @@ function generatePairwiseTable(numItems, containerId, itemType) {
   headerRow += "</tr></thead><tbody>";
   table.innerHTML += headerRow;
 
-  // Mengisi tabel dengan nilai perbandingan
   for (let i = 1; i <= numItems; i++) {
     let row = `<tr><th>${itemType.charAt(0)}${i}</th>`;
     for (let j = 1; j <= numItems; j++) {
@@ -68,15 +54,13 @@ function generatePairwiseTable(numItems, containerId, itemType) {
 }
 
 function generatePairwiseTablesForAlternatives(numCriteria, numAlternatives) {
-  // Menghasilkan tabel perbandingan alternatif untuk setiap kriteria
   const container = document.getElementById("pairwiseAlternativesContainer");
   container.innerHTML = "";
   for (let i = 1; i <= numCriteria; i++) {
     const table = document.createElement("table");
     table.id = `alternativesComparisonTableC${i}`;
-    table.className = "table table-bordered table-striped text-center"; // Menambahkan kelas text-center
+    table.className = "table table-bordered table-striped";
 
-    // Menyiapkan header tabel untuk alternatif
     let headerRow = `<thead class='thead-dark'><tr><th>Alternatif</th>`;
     for (let j = 1; j <= numAlternatives; j++) {
       headerRow += `<th>A${j}</th>`;
@@ -84,7 +68,6 @@ function generatePairwiseTablesForAlternatives(numCriteria, numAlternatives) {
     headerRow += "</tr></thead><tbody>";
     table.innerHTML += headerRow;
 
-    // Mengisi tabel dengan nilai perbandingan alternatif
     for (let j = 1; j <= numAlternatives; j++) {
       let row = `<tr><th>A${j}</th>`;
       for (let k = 1; k <= numAlternatives; k++) {
@@ -99,17 +82,14 @@ function generatePairwiseTablesForAlternatives(numCriteria, numAlternatives) {
     }
     table.innerHTML += `</tbody>`;
 
-    // Menambahkan heading untuk tabel alternatif
     const heading = document.createElement("h3");
     heading.textContent = `Tabel Perbandingan Alternatif untuk Kriteria C${i}`;
-    heading.className = "mt-4";
     container.appendChild(heading);
     container.appendChild(table);
   }
 }
 
 function updateAutoValues(row, col, tableId) {
-  // Memperbarui nilai di sel yang bersesuaian dengan nilai yang diinput
   const table = document.getElementById(tableId);
   const value = table.rows[row].cells[col].innerText;
 
@@ -120,12 +100,10 @@ function updateAutoValues(row, col, tableId) {
 }
 
 function calculateWeights() {
-  // Mengambil tabel perbandingan kriteria dan nilai-nilai dari tabel tersebut
   const criteriaTable = document.getElementById("kriteriaComparisonTable");
   const criteriaValues = [];
 
-  document.getElementById("result").classList.remove("hidden");
-  // Ambil nilai-nilai dari tabel perbandingan kriteria
+  // Ambil nilai dari tabel perbandingan kriteria
   for (let i = 1; i < criteriaTable.rows.length; i++) {
     const rowValues = [];
     for (let j = 1; j < criteriaTable.rows[i].cells.length; j++) {
@@ -137,16 +115,17 @@ function calculateWeights() {
 
   // Hitung bobot kriteria
   const criteriaWeights = calculateWeightsFromMatrix(criteriaValues);
-  let resultText = `<div class="alert alert-info">Bobot Kriteria:</div><ul>`;
-  criteriaWeights.forEach((weight, i) => {
-    resultText += `<li>C${i + 1}: ${weight.toFixed(4)}</li>`;
-  });
-  resultText += `</ul>`;
+  let resultText = "<div class='alert alert-info'>Bobot Kriteria:</div><ul>";
+  for (let i = 0; i < criteriaWeights.length; i++) {
+    resultText += `<li>C${i + 1}: ${criteriaWeights[i].toFixed(4)}</li>`;
+  }
+  resultText += "</ul>";
 
+  const alternativesResults = [];
   const alternativeTables = document.querySelectorAll('[id^="alternativesComparisonTableC"]');
   const alternativeScores = Array(alternativeTables.length).fill(0);
 
-  let alternativesResults = "";
+  // Menghitung bobot alternatif untuk setiap kriteria
   alternativeTables.forEach((table, index) => {
     const alternativeValues = [];
     for (let i = 1; i < table.rows.length; i++) {
@@ -158,28 +137,36 @@ function calculateWeights() {
       alternativeValues.push(rowValues);
     }
 
-    // Hitung bobot alternatif untuk masing-masing kriteria
+    // Hitung bobot alternatif
     const alternativeWeights = calculateWeightsFromMatrix(alternativeValues);
-    alternativesResults += `<div class="alert alert-warning mt-3">Bobot Alternatif untuk Kriteria C${index + 1}:</div><ul>`;
-    alternativeWeights.forEach((weight, i) => {
-      alternativesResults += `<li>A${i + 1}: ${weight.toFixed(4)}</li>`;
-      alternativeScores[i] += weight * criteriaWeights[index];
-    });
-    alternativesResults += `</ul>`;
+    alternativesResults.push(alternativeWeights);
+    resultText += `<div class='alert alert-info mt-3'>Bobot Alternatif untuk Kriteria C${index + 1}:</div><table class='table table-bordered table-striped'><thead><tr><th>Alternatif</th><th>Bobot</th></tr></thead><tbody>`;
+    for (let i = 0; i < alternativeWeights.length; i++) {
+      resultText += `<tr><td>A${i + 1}</td><td>${alternativeWeights[i].toFixed(4)}</td></tr>`;
+      // Menghitung skor total untuk setiap alternatif
+      alternativeScores[i] += alternativeWeights[i] * criteriaWeights[index];
+    }
+    resultText += `</tbody></table>`;
   });
 
-  // Hitung ranking alternatif berdasarkan skor akhir
-  const alternativeRankings = alternativeScores.map((score, index) => ({ alternative: `A${index + 1}`, score })).sort((a, b) => b.score - a.score);
+  // Buat tabel hasil skor dan peringkat
+  const alternativeRankings = alternativeScores.map((score, index) => ({ alternative: `A${index + 1}`, score })).sort((a, b) => b.score - a.score); // Urutkan berdasarkan skor tertinggi
 
-  // Buat tabel hasil ranking
+  // Hasil tabel
   let tableResult = `
-    <table class="table table-bordered table-hover mt-4">
-      <thead class="thead-dark">
-        <tr><th>Alternatif</th><th>Skor</th><th>Rank</th></tr>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Alternatif</th>
+          <th>Skor</th>
+          <th>Rank</th>
+        </tr>
       </thead>
       <tbody>`;
 
-  alternativeRankings.forEach((item, index) => {
+  // Tampilkan hasil hanya untuk alternatif yang sesuai dengan input
+  const numAlternatives = document.getElementById("alternatives").value.split(",").length;
+  alternativeRankings.slice(0, numAlternatives).forEach((item, index) => {
     tableResult += `
       <tr>
         <td>${item.alternative}</td>
@@ -190,31 +177,34 @@ function calculateWeights() {
 
   tableResult += `</tbody></table>`;
 
-  // Cari alternatif terbaik dan tampilkan setelah tabel ranking
+  const bestAlternativeIndex = alternativeScores.indexOf(Math.max(...alternativeScores));
+  const bestAlternativeScore = alternativeScores[bestAlternativeIndex];
 
-  // Gabungkan hasil bobot, bobot alternatif, dan hasil ranking
-  const bestAlternative = alternativeRankings[0];
-  let conclusion = `
-    <div class="alert alert-success mt-3">Alternatif Terbaik: ${bestAlternative.alternative} dengan skor ${bestAlternative.score.toFixed(4)}.<br> 
-    Alasan: Alternatif ini memiliki skor tertinggi berdasarkan perbandingan kriteria dan alternatif</div>`;
-  // document.getElementById("result").innerHTML = tableResult + resultText + alternativesResults;
-  document.getElementById("result").innerHTML = resultText + tableResult + conclusion;
+  // Menyusun hasil akhir
+  conclusion = `<div class='alert alert-success mt-3'>Alternatif Terbaik: A${bestAlternativeIndex + 1} dengan skor ${bestAlternativeScore.toFixed(4)}.</div>`;
+  conclusion += `<div>Alternatif ini dipilih karena memiliki skor tertinggi berdasarkan perbandingan yang dilakukan.</div>`;
+
+  document.getElementById("result").innerHTML = resultText + tableResult + "<br>" + conclusion;
 }
 
 function calculateWeightsFromMatrix(matrix) {
-  // Menghitung bobot dari matriks
-  const numItems = matrix.length;
-  const weights = Array(numItems).fill(0);
+  const numRows = matrix.length;
+  const numCols = matrix[0].length;
+  const columnSums = Array(numCols).fill(0);
+  const weights = Array(numRows).fill(0);
 
-  for (let j = 0; j < numItems; j++) {
-    let columnSum = 0;
-    for (let i = 0; i < numItems; i++) {
-      columnSum += matrix[i][j];
+  for (let j = 0; j < numCols; j++) {
+    for (let i = 0; i < numRows; i++) {
+      columnSums[j] += matrix[i][j];
     }
-    for (let i = 0; i < numItems; i++) {
-      weights[j] += matrix[i][j] / columnSum;
-    }
-    weights[j] /= numItems;
   }
+
+  for (let i = 0; i < numRows; i++) {
+    for (let j = 0; j < numCols; j++) {
+      weights[i] += matrix[i][j] / columnSums[j];
+    }
+    weights[i] /= numCols; // Normalisasi bobot
+  }
+
   return weights;
 }

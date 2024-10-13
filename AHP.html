@@ -3,54 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Metode AHP</title>
+    <title>AHP Pemilihan Lokasi Ruang Himpunan</title>
     <link rel="stylesheet" href="style/ahp.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
   </head>
-
-  <style>
-    .hidden {
-      display: none;
-    }
-
-    .container {
-      width: 70vw;
-    }
-
-    .scroll-to-top {
-      position: fixed;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      bottom: 20px;
-      right: 20px;
-      width: 50px;
-      height: 50px;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      display: none;
-      z-index: 1000;
-      font-size: 25px;
-      text-align: center;
-      cursor: pointer;
-    }
-  </style>
-
   <body>
-    <a href="index.html" class="back">Back to Dashboard</a>
     <div class="container my-5">
-      <h1 class="text-center mb-4">Method AHP</h1>
+      <h1 class="text-center mb-4">Pemilihan Lokasi Ruang Himpunan</h1>
 
-      <div id="inputContainer" class="card p-4 mb-5">
+      <div class="card p-4 mb-4 shadow-sm">
         <h2 class="card-title">Input Kriteria dan Alternatif</h2>
         <div class="mb-3">
           <label for="criteria" class="form-label">Kriteria (pisahkan dengan koma):</label>
@@ -60,40 +21,41 @@
           <label for="alternatives" class="form-label">Alternatif (pisahkan dengan koma):</label>
           <input type="text" id="alternatives" class="form-control" placeholder="Contoh: Lokasi 1, Lokasi 2, Lokasi 3" />
         </div>
-        <button onclick="generateTables()" class="btn btn-primary">Buat Tabel</button>
+        <button class="btn btn-primary" onclick="generateTables()">Buat Tabel</button>
       </div>
 
-      <div class="hidden" id="input-table">
-        <h2 class="text-center mb-4">Tabel Kriteria</h2>
-        <div class="table-responsive text-center">
-          <table id="criteriaTable" class="table table-bordered"></table>
-        </div>
-
-        <h2 class="text-center mb-4">Tabel Alternatif</h2>
-        <div class="table-responsive text-center">
-          <table id="alternativeTable" class="table table-bordered"></table>
-        </div>
-
-        <h2 class="text-center mb-4">Tabel Perbandingan Kriteria</h2>
-        <div id="pairwiseCriteriaContainer" class="table-responsive text-center"></div>
-
-        <h2 class="text-center mb-4">Tabel Perbandingan Alternatif</h2>
-        <div id="pairwiseAlternativesContainer" class="table-responsive text-center"></div>
-      </div>
-      <div class="text-center mb-4">
-        <button onclick="calculateWeights()" class="btn btn-success">Hitung</button>
+      <!-- Tabel Kriteria -->
+      <div class="mb-4">
+        <h2>Tabel Kriteria</h2>
+        <table id="criteriaTable" class="table table-bordered table-striped"></table>
       </div>
 
-      <div id="result" class="alert alert-info hidden" role="alert"></div>
+      <!-- Tabel Alternatif -->
+      <div class="mb-4">
+        <h2>Tabel Alternatif</h2>
+        <table id="alternativeTable" class="table table-bordered table-striped"></table>
+      </div>
+
+      <!-- Tabel Perbandingan Kriteria -->
+      <div class="mb-4">
+        <h2>Tabel Perbandingan Kriteria</h2>
+        <div id="pairwiseCriteriaContainer" class="table-responsive"></div>
+      </div>
+
+      <!-- Tabel Perbandingan Alternatif -->
+      <div class="mb-4">
+        <h2>Tabel Perbandingan Alternatif</h2>
+        <div id="pairwiseAlternativesContainer" class="table-responsive"></div>
+      </div>
+
+      <!-- Tombol Hitung -->
+      <button class="btn btn-success" onclick="calculateWeights()">Hitung</button>
+
+      <!-- Hasil -->
+      <div id="result" class="mt-4"></div>
     </div>
-
-    <button class="scroll-to-top text-center" id="scrollToTopBtn" onclick="scrollToTop()">
-      <i class="fas fa-chevron-up"></i>
-    </button>
 
     <script src="script/ahp.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
-    <script src="script/scroll-up.js"></script>
   </body>
 </html>
