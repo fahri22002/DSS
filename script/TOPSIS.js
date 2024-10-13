@@ -42,7 +42,7 @@ function generateTable() {
     weightHTML += '</tr></table>';
 
     // Tambahkan tombol untuk melakukan perhitungan TOPSIS
-    weightHTML += '<br><button onclick="calculateTOPSIS()">Hitung TOPSIS</button>';
+    weightHTML += '<br><button onclick="calculateTOPSIS()">Hitung</button>';
     
     // Tambahkan HTML bobot ke dalam container
     weightContainer.innerHTML = weightHTML;
