@@ -8,14 +8,14 @@ function generateTables() {
   const criteriaTable = document.getElementById("criteriaTable");
   criteriaTable.innerHTML = `<thead class="thead-dark"><tr><th>Kode</th><th>Nama</th></tr></thead><tbody>`;
   criteria.forEach((criterion, index) => {
-    criteriaTable.innerHTML += `<tr><td>C${String(index + 1).padStart(2, "0")}</td><td>${criterion}</td></tr>`;
+    criteriaTable.innerHTML += `<tr><td>K${String(index + 1)}</td><td>${criterion}</td></tr>`;
   });
   criteriaTable.innerHTML += `</tbody>`;
 
   const alternativeTable = document.getElementById("alternativeTable");
   alternativeTable.innerHTML = `<thead class="thead-dark"><tr><th>Kode</th><th>Nama</th></tr></thead><tbody>`;
   alternatives.forEach((alternative, index) => {
-    alternativeTable.innerHTML += `<tr><td>A${String(index + 1).padStart(2, "0")}</td><td>${alternative}</td></tr>`;
+    alternativeTable.innerHTML += `<tr><td>A${String(index + 1)}</td><td>${alternative}</td></tr>`;
   });
   alternativeTable.innerHTML += `</tbody>`;
 
@@ -93,10 +93,11 @@ function updateAutoValues(row, col, tableId) {
   const table = document.getElementById(tableId);
   const value = table.rows[row].cells[col].innerText;
 
-  if (value && value !== "1") {
-    const reciprocalValue = (1 / value).toFixed(3);
-    table.rows[col].cells[row].innerText = reciprocalValue;
+  let reciprocalValue = 1 / value;
+  if (reciprocalValue != 1) {
+    reciprocalValue = reciprocalValue.toFixed(3);
   }
+  table.rows[col].cells[row].innerText = reciprocalValue;
 }
 
 function calculateWeights() {
